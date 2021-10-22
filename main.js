@@ -8,7 +8,6 @@ let color = 0;
 let resultNumber;
 
 console.log(colors.green('Вывести простые числа из диапазона чисел между ' + start + ' и ' + end));
-console.log('-->', colors[trafficLight[color]]('Тест цвета'));
 
 if (isNaN(start) || isNaN(end)) {
   console.log(colors.red('В заданном диапазоне не число!'))
@@ -21,8 +20,9 @@ if (isNaN(start) || isNaN(end)) {
         }
       }
       if (flag == 1) {
-        // console.log(colors.america(color));
-        resultNumber = colors[trafficLight[color]](i);
+        // console.log(colors.red(color));
+        console.log(colors[trafficLight[color]](i));
+        resultNumber = colors[trafficLight[color]](i); // это выводит абырвалг...
         primeNumbers.push(resultNumber);
         color += 1;
         
