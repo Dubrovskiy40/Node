@@ -1,4 +1,5 @@
 const colors = require("colors");
+
 const EventEmitter = require('events');
 const arr = process.argv.slice(2);
 const timer = arr[0];
@@ -40,4 +41,3 @@ t.on('ready', () => {
 // const message = () => {
 //   console.log(colors.red(`Таймер завершил свою работу`));
 // }
-
