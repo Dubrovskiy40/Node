@@ -1,3 +1,4 @@
+
 const fs = require('fs');
 const ACCESS_LOG = './a.log';
 const IP89_LOG = './ip-89.123.1.41_requests.log';
@@ -39,4 +40,3 @@ readableStream.on('data', (chunk) => {
     //     }
     // )
 });
-
