@@ -1,4 +1,5 @@
 {
+
   "name": "les_04",
   "version": "1.0.0",
   "description": "",
@@ -9,11 +10,14 @@
   },
   "bin": {
     "reader": "main.js"
+
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+
     "inquirer": "^8.2.0",
     "yargs": "^17.2.1"
+
   }
 }
