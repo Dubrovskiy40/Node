@@ -1,42 +1,52 @@
 
-const fs = require('fs');
-const ACCESS_LOG = './a.log';
-const IP89_LOG = './ip-89.123.1.41_requests.log';
-const IP34_LOG = './ip-34.48.240.111_requests.log';
+// * Возможность передавать путь к директории в программу. 
+// Это актуально, когда вы не хотите покидать текущую директорию, 
+// но вам необходимо просмотреть файл, находящийся в другом месте;
+// * В содержимом директории переходить во вложенные каталоги;
+// * При чтении файлов искать в них заданную строку или паттерн.
 
-let readableStream  = fs.createReadStream(ACCESS_LOG, 'utf8');
-let writeableStream89 = fs.createWriteStream(IP89_LOG);
-let writeableStream34 = fs.createWriteStream(IP34_LOG);
+const fs = require('fs')
+const inquirer = require('inquirer');
+const path = require('path');
 
-let regExp89 = new RegExp('89.123.1.41', 'g');
-let regExp34 = new RegExp('34.48.240.111', 'g');
+const isDirectory = dirName => fs.lstatSync(dirName).isDirectory();
+const directoryList = dirName => fs.readdirSync(dirName);
+const executionDir = process.cwd();
 
-readableStream.on('data', (chunk) => {
-    const transformed89 = chunk.match(regExp89);
-    writeableStream89.write(transformed89.toString());
-    // fs.writeFile(
-    //     IP89_LOG,
-    //     transformed89.toString(),
-    //     {
-    //         encoding: 'utf-8',
-    //         flag: 'a',
-    //     },
-    //     (err) => {
-    //         if (err) console.log(err);
-    //     }
-    // )
+const getData = executionDir => inquirer.prompt([
+   {
+      name: 'fileName',
+      type: 'list',
+      message: `Выберете файл/папку для чтения: `,
+      choices: directoryList(executionDir)
+   }
+])
+   .then(answer => {
+      executionDir = path.resolve(executionDir, answer.fileName);
 
-    const transformed34 = chunk.toString().match(regExp34);
-    writeableStream34.write(transformed34.toString());
-    // fs.writeFile(
-    //     IP34_LOG,
-    //     transformed34.toString(),
-    //     {
-    //         encoding: 'utf-8',
-    //         flag: 'a',
-    //     },
-    //     (err) => {
-    //         if (err) console.log(err);
-    //     }
-    // )
-});
+      if (isDirectory(executionDir)) { // если директория, запускаем рекурсию
+         getData(executionDir)
+      } else {
+         const data = fs.readFileSync(executionDir, 'utf-8');
+         console.log(data);
+         inquirer.prompt([{ // запрос строки для поиска в файле
+            name: 'stringName',
+            type: 'input',
+            message: `Введите строку для поиска в текущем файле: `
+         }])
+            .then(answer => {
+               console.log(`Вы ввели: ${answer.stringName}`)
+               const inquiry = answer.stringName;
+               
+               if (inquiry == '') {
+                  console.log('null');
+               } else {
+                  const regExp = new RegExp(inquiry, 'igm');
+                  console.log(data.match(regExp));
+               }
+            })
+            .catch(error => console.log(error));
+      }
+   })
+
+   getData(executionDir);
