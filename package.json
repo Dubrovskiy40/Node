@@ -1,7 +1,7 @@
 {
-  "name": "les_01",
+  "name": "lesson_05",
   "version": "1.0.0",
-  "description": "lesson node.js",
+  "description": "",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,9 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "colors": "^1.4.0"
-  },
-  "devDependencies": {
-    "eslint": "^8.0.1"
+    "express": "^4.17.1",
+    "inquirer": "^8.2.0",
+    "request": "^2.88.2"
   }
 }
