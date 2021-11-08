@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Socket</title>
+    <script src="https://cdn.socket.io/4.2.0/socket.io.min.js" integrity="sha384-PiBR5S00EtOj2Lto9Uu81cmoyZqR57XcOna1oAuVuIEjzj0wpqDVfD0JA9eXlRsj" crossorigin="anonymous"></script>
+</head>
+<body>
+    <span class="spanConnect"></span>
+    <span class="countUsers"></span>
+    <input id="input" type="text" autofocus>
+    <button id="button">Send</button>
+    <div id="messages"></div>
+
+    <script>
+        const socket = io('localhost:5555');
+        const messageBlock = document.querySelector('#messages');
+        const sendButton = document.querySelector('#button');
+        const input = document.querySelector('#input');
+        const spanConnect = document.querySelector('.spanConnect');
+        const countUsers = document.querySelector('.countUsers');
+
+        socket.on('broadcast', (data) => {
+            countUsers.textContent =  `В чате: ${data.description}`;
+        });
+
+        socket.on('connect', () => {
+            console.log('Вы подключены к серверу!');
+        });
+        socket.on('disconnect', () => {
+            console.log('Связь с сервером потеряна!');
+        });
+
+        socket.on('server-msg', data => {
+            console.log('data', data);
+            messageBlock.insertAdjacentHTML('beforeend', `<div><h4>${ data.author }</h4><p>${ data.message }</p></div>`)
+        });
+
+        sendButton.addEventListener('click', () => {
+            const data = {
+                message: input.value
+            };
+
+            socket.emit('client-msg', data);
+        });
+    </script>
+</body>
+</html>
